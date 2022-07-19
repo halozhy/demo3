@@ -1,7 +1,7 @@
 --[[
-    Card4.lua
-    卡牌4
-    描述：卡牌4的定义
+    Card7.lua
+    卡牌7
+    描述：卡牌7的定义
     编写：李昊
     修订：周星宇
     检查：张昊煜
@@ -9,7 +9,7 @@
 
 local Bullet = require("inGame.bullet.Bullet")
 
-local Card4 = {
+local Card7 = {
     x_ = nil,
     y_ = nil,
     x1_ = nil,
@@ -36,7 +36,7 @@ local Card4 = {
     @param player
     @return card1
 ]]
-function Card4:new(player,x,y,x1,y1,id,pos,starLevel)
+function Card7:new(player,x,y,x1,y1,id,pos,starLevel)
     local card = {}
     self.__index = self
     setmetatable(card,self)
@@ -49,18 +49,18 @@ end
     @param player
     @return none
 ]]
-function Card4:init(player,x,y,x1,y1,id,pos,starLevel)
+function Card7:init(player,x,y,x1,y1,id,pos,starLevel)
     self.x_ = x
     self.y_ = y
     self.x1_ = x1
     self.y1_ = y1
     self.id_ = id
-    self.atk_ = 100
-    self.atkEnhance_ = 100
+    self.atk_ = 20
+    self.atkEnhance_ = 15
     self.state_ = {}
     self.cha_ = 5
     self.chr_ = 2
-    self.fireCd_ = 1
+    self.fireCd_ = 0.45
     self.player_ = player
     self.time_ = 0
     self.size_ = 1
@@ -68,11 +68,15 @@ function Card4:init(player,x,y,x1,y1,id,pos,starLevel)
     self.enhanceLevel_ = self.player_.cardEnhanceLevel_[self.size_]
     self.starLevel_ = starLevel
     self:setStarLevel()
+    self.fireCdBase_ = self.fireCd_
     for i = 1,self.enhanceLevel_ -1 do
         self:enhance()
     end
-    self.skillValue_ = 120
-    self.skillValueEnhance_ = 40
+    -- self.skillValue_ = 120
+    -- self.skillValueEnhance_ = 40
+    self.fireCdEnhance_ = 0.01
+    self.fireCdEnhanceMax_ = 0.1
+    self.fireCnt_ = 0
 end
 
 --[[
@@ -80,75 +84,74 @@ end
     @param none
     @return none
 ]]
-function Card4:enhance()
+function Card7:enhance()
     self.enhanceLevel_= self.enhanceLevel_ + 1
     self.atk_ = self.atk_ + self.atkEnhance_
     self.skillValue_ = self.skillValue_ + self.skillValueEnhance_
 end
 
-function Card4:setStarLevel()
+function Card7:setStarLevel()
     self.fireCd_ = self.fireCd_/self.starLevel_
 end
 
 --[[
     getX
 ]]
-function Card4:getX()
+function Card7:getX()
     return self.x_
 end
 
-function Card4:getY()
+function Card7:getY()
     return self.y_
 end
 
-function Card4:getId()
+function Card7:getId()
     return self.id_
 end
 
-function Card4:getSize()
+function Card7:getSize()
     return self.size_
 end
 
-function Card4:getEnhanceLevel()
+function Card7:getEnhanceLevel()
     return self.enhanceLevel_
 end
 
 --[[
     attack攻击函数
 ]]
-function Card4:attack()
+function Card7:attack()
 
-     -- 攻击场上血量最高的怪物，对BOSS造成双倍伤害
-     if #self.player_.enemy_ == 0 then
+    if #self.player_.enemy_ == 0 then
         return
     end
 
     local enemy
-    local isBoss = false
 
     if self.player_.boss_ == nil then
-        -- 寻找场上血量最高的怪物
-        local maxHp = -1
-        local maxHpEnemy
-        for index, value in ipairs(self.player_.enemy_) do
-            if value.hp_ > maxHp then
-                maxHp = value.hp_
-                maxHpEnemy = value
-            end
-        end
-        enemy = maxHpEnemy
+        enemy = self.player_.enemy_[1]
     else
         enemy = self.player_.boss_
-        isBoss = true
     end
 
-    -- for k, v in pairs(self.player_.enemy_) do
-    --     if enemy.time_ > self.player_.enemy_[k].time_ then
-    --         enemy = self.player_.enemy_[k]
-    --     end
-    -- end
+    for k, v in pairs(self.player_.enemy_) do
+        if enemy.time_ > self.player_.enemy_[k].time_ then
+            enemy = self.player_.enemy_[k]
+        end
+    end
 
     local hurt = self.atk_
+    -- 攻击时攻速获得提高
+    -- 每攻击一次攻速提高基础攻速的1%（上限10%）
+    local fireCdTotalEnhance = 0
+    for i=1,self.fireCnt_ do
+        if fireCdTotalEnhance < self.fireCdEnhanceMax_ then 
+            fireCdTotalEnhance = fireCdTotalEnhance + self.fireCdEnhance_
+            self.fireCd_ = self.fireCdBase_ * (1 - fireCdTotalEnhance)
+        end
+    end
+    -- print("fireCnt", self.fireCnt_)
+    -- print("fireCD", self.fireCd_)
 
     local isCha = false
     if math.random(100) <= 5 then
@@ -156,20 +159,17 @@ function Card4:attack()
         isCha = true
     end
 
-    -- 对BOSS造成双倍伤害
-    if isBoss then
-        hurt = hurt*2
-    end
-
     local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,1,nil)
     table.insert(self.player_.bullet_,bullet)
+
+    self.fireCnt_ = self.fireCnt_ + 1
 
 end
 
 --[[
     attack攻击函数
 ]]
-function Card4:destroy()
+function Card7:destroy()
     self.player_:removeCard(self)
     self.player_.cardPos_[self.pos_] = 0
 end
@@ -177,7 +177,7 @@ end
 --[[
     update
 ]]
-function Card4:update(dt)
+function Card7:update(dt)
     
     self.time_ = self.time_ - dt
     if self.time_ <= 0 then
@@ -187,4 +187,4 @@ function Card4:update(dt)
 
 end
 
-return Card4
+return Card7
