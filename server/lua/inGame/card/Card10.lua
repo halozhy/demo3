@@ -1,15 +1,16 @@
 --[[
-    Card4.lua
-    卡牌4
-    描述：卡牌4的定义
+    Card10.lua
+    卡牌10
+    描述：卡牌10的定义
     编写：李昊
     修订：周星宇
     检查：张昊煜
 ]]
 
 local Bullet = require("inGame.bullet.Bullet")
+local ZhongDu = require("inGame.state.enemyState.ZhongDu")
 
-local Card4 = {
+local Card10 = {
     x_ = nil,
     y_ = nil,
     x1_ = nil,
@@ -36,7 +37,7 @@ local Card4 = {
     @param player
     @return card1
 ]]
-function Card4:new(player,x,y,x1,y1,id,pos,starLevel)
+function Card10:new(player,x,y,x1,y1,id,pos,starLevel)
     local card = {}
     self.__index = self
     setmetatable(card,self)
@@ -49,18 +50,18 @@ end
     @param player
     @return none
 ]]
-function Card4:init(player,x,y,x1,y1,id,pos,starLevel)
+function Card10:init(player,x,y,x1,y1,id,pos,starLevel)
     self.x_ = x
     self.y_ = y
     self.x1_ = x1
     self.y1_ = y1
     self.id_ = id
-    self.atk_ = 100
-    self.atkEnhance_ = 100
+    self.atk_ = 30
+    self.atkEnhance_ = 10
     self.state_ = {}
     self.cha_ = 5
     self.chr_ = 2
-    self.fireCd_ = 1
+    self.fireCd_ = 1.3
     self.player_ = player
     self.time_ = 0
     self.size_ = 1
@@ -71,8 +72,8 @@ function Card4:init(player,x,y,x1,y1,id,pos,starLevel)
     for i = 1,self.enhanceLevel_ -1 do
         self:enhance()
     end
-    self.skillValue_ = 120
-    self.skillValueEnhance_ = 40
+    self.skillValue_ = 50
+    self.skillValueEnhance_ = 20
 end
 
 --[[
@@ -80,66 +81,55 @@ end
     @param none
     @return none
 ]]
-function Card4:enhance()
+function Card10:enhance()
     self.enhanceLevel_= self.enhanceLevel_ + 1
     self.atk_ = self.atk_ + self.atkEnhance_
     self.skillValue_ = self.skillValue_ + self.skillValueEnhance_
 end
 
-function Card4:setStarLevel()
+function Card10:setStarLevel()
     self.fireCd_ = self.fireCd_/self.starLevel_
 end
 
 --[[
     getX
 ]]
-function Card4:getX()
+function Card10:getX()
     return self.x_
 end
 
-function Card4:getY()
+function Card10:getY()
     return self.y_
 end
 
-function Card4:getId()
+function Card10:getId()
     return self.id_
 end
 
-function Card4:getSize()
+function Card10:getSize()
     return self.size_
 end
 
-function Card4:getEnhanceLevel()
+function Card10:getEnhanceLevel()
     return self.enhanceLevel_
 end
 
 --[[
     attack攻击函数
 ]]
-function Card4:attack()
-
-     -- 攻击场上血量最高的怪物，对BOSS造成双倍伤害
-     if #self.player_.enemy_ == 0 then
+function Card10:attack()
+    if #self.player_.enemy_ == 0 then
         return
     end
 
     local enemy
-    local isBoss = false
 
+    -- 随机敌人
+    math.randomseed(tostring(os.time()):reverse():sub(1, 6))
     if self.player_.boss_ == nil then
-        -- 寻找场上血量最高的怪物
-        local maxHp = -1
-        local maxHpEnemy
-        for index, value in ipairs(self.player_.enemy_) do
-            if value.hp_ > maxHp then
-                maxHp = value.hp_
-                maxHpEnemy = value
-            end
-        end
-        enemy = maxHpEnemy
+        enemy = self.player_.enemy_[math.random(1, #self.player_.enemy_)]
     else
         enemy = self.player_.boss_
-        isBoss = true
     end
 
     -- for k, v in pairs(self.player_.enemy_) do
@@ -149,19 +139,16 @@ function Card4:attack()
     -- end
 
     local hurt = self.atk_
-
     local isCha = false
     if math.random(100) <= 5 then
         hurt = hurt*self.chr_
         isCha = true
     end
 
-    -- 对BOSS造成双倍伤害
-    if isBoss then
-        hurt = hurt*2
-    end
+    -- 使被攻击目标得到“中毒”状态。中毒：每秒造成额外伤害。
+    local zhongdu = ZhongDu:new(self.skillValue_)
 
-    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,1,nil)
+    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,1,zhongdu)
     table.insert(self.player_.bullet_,bullet)
 
 end
@@ -169,7 +156,7 @@ end
 --[[
     attack攻击函数
 ]]
-function Card4:destroy()
+function Card10:destroy()
     self.player_:removeCard(self)
     self.player_.cardPos_[self.pos_] = 0
 end
@@ -177,7 +164,7 @@ end
 --[[
     update
 ]]
-function Card4:update(dt)
+function Card10:update(dt)
     
     self.time_ = self.time_ - dt
     if self.time_ <= 0 then
@@ -187,4 +174,4 @@ function Card4:update(dt)
 
 end
 
-return Card4
+return Card10

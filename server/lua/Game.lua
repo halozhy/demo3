@@ -42,7 +42,7 @@ function update(dt)
     else
         print("sssss shu ju chuan ru sssssssssss")
         local msg = cjson.decode(msgStr)
-        Utils.print_dump(msg)
+        -- Utils.print_dump(msg)
         if (msg["type"] == MsgDef.REQ_TYPE.SETUP_CONNECTION) then
             table.insert(sidMap_, msg["sid"])
             print(gameData)
@@ -63,7 +63,7 @@ function update(dt)
     end
 
     local data = gameData:update(dt)
-    Utils.print_dump(data)
+    -- Utils.print_dump(data)
 
     if data == nil then
         return
