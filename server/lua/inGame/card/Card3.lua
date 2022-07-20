@@ -153,7 +153,7 @@ function Card3:attack()
         isCha = true
     end
 
-    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,1,nil)
+    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,3,nil)
     table.insert(self.player_.bullet_,bullet)
 
 end

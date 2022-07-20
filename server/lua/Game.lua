@@ -75,7 +75,7 @@ function update(dt)
             ack["type"] = MsgDef.ACK_TYPE.GAME_OVER
             ack["data"] = data
             local retMsg = cjson.encode(ack)
-            sendMsg2ClientBySid(data[i].sid, retMsg)
+            sendMsg2ClientBySid(data["sid"][i], retMsg)
         end
         return
     end
@@ -88,7 +88,6 @@ function update(dt)
         local retMsg = cjson.encode(ack)
         sendMsg2ClientBySid(data[i].sid, retMsg)
     end
-
 end
 
 --[[
@@ -109,4 +108,4 @@ function main()
 	end
 end
 
-xpcall(main, __G__TRACKBACK__)
+xpcall(main, Utils.__G__TRACKBACK__)

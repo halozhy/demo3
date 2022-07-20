@@ -55,7 +55,6 @@ function GameData:resetPlayer(id,enemy)
     else
         self.player1_:createEnemy(enemy:getDafHp(),enemy:getSp(),1)
     end
-    --msSleep(10000)
 end
 
 function GameData:removeHurt(hurt)
@@ -95,7 +94,7 @@ end
 function GameData:addPlayer(msg)
     print("sssssssssss  gamedata addplayer sssssssssssssssss")
     self.player1_  = Player:new(self,1,msg[1])
-      print("sssssssssss  gamedata addplayer sssssssssssssssss")
+    print("sssssssssss  gamedata addplayer sssssssssssssssss")
     self.player1_:createCard()
     self.sid_[1] = msg[1].sid
     self.player2_  = Player:new(self,2,msg[2])
@@ -214,6 +213,8 @@ function GameData:gameOver()
         data["loser"] = loser
     end
     msg["data"] = data
+    msg["sid"] = {self.sid_[1],self.sid_[2]}
+    self.isPause_ = true
     return msg
 end
 

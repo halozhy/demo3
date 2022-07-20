@@ -122,7 +122,6 @@ function Card2:attack()
     print(self.id_)
     print(self.starLevel_)
     if self.starLevel_ == 2 then 
-        -- msSleep(100000)
     end
      -- 每次攻击会对星级数个怪物造成伤害
     -- 一星打一个，两星打两个.......
@@ -153,7 +152,7 @@ function Card2:attack()
         isCha = true
     end
     
-    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,1,nil)
+    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,2,nil)
     table.insert(self.player_.bullet_,bullet)
 
     -- 其余目标
@@ -242,7 +241,6 @@ function Card2:attack()
         end
         -- print(e)
         -- print(enemy)
-        -- msSleep(10000)
         local bullet1 = Bullet:new(e,self.x_,self.y_,self.x1_,self.y1_,hurt1,isCha1,self.player_:getBulletId(),self.player_,1,nil)
         table.insert(self.player_.bullet_,bullet1)
     end

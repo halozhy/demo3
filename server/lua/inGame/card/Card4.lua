@@ -161,7 +161,7 @@ function Card4:attack()
         hurt = hurt*2
     end
 
-    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,1,nil)
+    local bullet = Bullet:new(enemy,self.x_,self.y_,self.x1_,self.y1_,hurt,isCha,self.player_:getBulletId(),self.player_,4,nil)
     table.insert(self.player_.bullet_,bullet)
 
 end

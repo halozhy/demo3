@@ -112,10 +112,13 @@ function Player:init(gameData,id,data)
     self.cardId_ = 0
     self.deleteCard_ = {}
     self.cardGroupId_ = {}
+    
     self.cardGroup_ = {data["cards"]}
+
     for k,v in pairs(self.cardGroup_[1]) do
-        table.insert(self.cardGroupId_,k)
+        table.insert(self.cardGroupId_,tonumber(k))
     end
+ 
     self.cardPos_ = {}
     for i = 1,15 do
         self.cardPos_[i] = 0
@@ -182,24 +185,14 @@ function Player:enhanceCard(msg)
     print("ssss enhance card sssss")
     Utils.print_dump(msg)
     local cardEnhanceLevel = self.cardEnhanceLevel_[msg]
-    print(cardEnhanceLevel)
-    print(CardDef.CARD_ENHANCE[cardEnhanceLevel])
     if self.cardEnhanceLevel_[msg] == 4 then 
-        print(" i am sb")
-        msSleep(1000000)
     end
     if CardDef.CARD_ENHANCE[cardEnhanceLevel] > self.sp_ then
-        print(CardDef.CARD_ENHANCE[cardEnhanceLevel])
-        print(cardEnhanceLevel)
         if self.cardEnhanceLevel_[msg] == 4 then 
-            print(" i am sb")
-            msSleep(1000000)
         end
         print("ssss enhance card 1sssss")
     else
         if self.cardEnhanceLevel_[msg] == 4 then 
-            print(" i am sb")
-            msSleep(1000000)
         end
         self.cardEnhanceLevel_[msg] = self.cardEnhanceLevel_[msg] + 1
         print("ssss enhance card sssss")
@@ -271,6 +264,7 @@ function Player:compoundCard(msg)
         x1 = CardDef.POS_UP[pos].X
         y1 = CardDef.POS_UP[pos].Y
         self.cardId_ = self.cardId_ + 1
+        print(size)
         local card = Card[tonumber(self.cardGroupId_[size])]:new(self,x,y,x1,y1,self.cardId_,pos,card1.starLevel_ + 1)
         self.cardPos_[pos] = 1
         self.card_[card.id_..""] = card
@@ -338,7 +332,9 @@ function Player:createCard()
 
     self.cardId_ = self.cardId_ + 1
 
-    local card = Card[tonumber(self.cardGroupId_[size])]:new(self,x,y,x1,y1,self.cardId_,pos,1)
+    print(size)
+    Utils.print_dump(self.cardGroupId_)
+    local card = Card[tonumber(self.cardGroupId_[size].."")]:new(self,x,y,x1,y1,self.cardId_,pos,1)
 
     print("create card")
     self.cardPos_[pos] = 1
@@ -495,11 +491,6 @@ function Player:update(dt)
         enemy = enemy, card = card, bullet = bullet, boss = boss,
         enhance = enhance, name = self.name_,cardGroup = self.cardGroupId_}
 
-    print("sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-    print("sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-    print(self.sp_)
-    print("sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-    print("sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
 
     info[2] = {sp = self.sp_,hp = self.hp_,createSp = self.createSp_,
         enemy = enemy1, card = card1, bullet = bullet1, boss = boss1,

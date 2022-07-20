@@ -600,10 +600,10 @@ function InfoLayer:update()
     local isSame = true
     local cardGroup = GameData:getCardGroup()
     for i = 1,5 do 
-        if self.enemyCardGroup_[i] == cardGroup[i+5] then
+        if self.enemyCardGroup_[i] ~= cardGroup[i+5] then
             isSame = false
             break
-        elseif self.cardGroup_[i] == cardGroup[i+5] then
+        elseif self.cardGroup_[i] ~= cardGroup[i+5] then
             isSame = false
             break
         end
