@@ -63,7 +63,7 @@ function Card9:init(player,x,y,x1,y1,id,pos,starLevel)
     self.fireCd_ = 1.2
     self.player_ = player
     self.time_ = 0
-    self.size_ = 1
+    self.size_ = 9
     self.pos_ = pos
     self.enhanceLevel_ = self.player_.cardEnhanceLevel_[self.size_]
     self.starLevel_ = starLevel

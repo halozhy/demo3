@@ -51,20 +51,20 @@ end
     @return none
 ]]
 function Card1:init(player,x,y,x1,y1,id,pos,starLevel)
+    self.size_ = 1
     self.x_ = x
     self.y_ = y
     self.x1_ = x1
     self.y1_ = y1
     self.id_ = id
-    self.atk_ = 20
-    self.atkEnhance_ = 10
+    self.atk_ = self.player_[""..self.size_]["atk"]
+    self.atkEnhance_ = self.player_[""..self.size_]["atkDelta"]
     self.state_ = {}
     self.cha_ = 5
     self.chr_ = 2
-    self.fireCd_ = 0.8
+    self.fireCd_ =self.player_[""..self.size_]["fireCd"]
     self.player_ = player
     self.time_ = 0
-    self.size_ = 1
     self.pos_ = pos
     self.enhanceLevel_ = self.player_.cardEnhanceLevel_[self.size_]
     self.starLevel_ = starLevel
@@ -72,7 +72,8 @@ function Card1:init(player,x,y,x1,y1,id,pos,starLevel)
     for i = 1,self.enhanceLevel_ -1 do
         self:enhance()
     end
-    self.skillValue_ = 5
+    self.skillValue_ = self.player_[""..self.size_]["skillOne"]
+    self.skillValueEnhance_ = self.player_[""..self.size_]["skillOneDelta"]
 end
 
 --[[
@@ -83,6 +84,7 @@ end
 function Card1:enhance()
     self.enhanceLevel_= self.enhanceLevel_ + 1
     self.atk_ = self.atk_ + self.atkEnhance_
+    self.skillValue_ = self.atk_ + self.skillValueEnhance_
 end
 
 function Card1:setStarLevel()

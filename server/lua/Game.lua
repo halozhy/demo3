@@ -42,7 +42,7 @@ function update(dt)
     else
         print("sssss shu ju chuan ru sssssssssss")
         local msg = cjson.decode(msgStr)
-        -- Utils.print_dump(msg)
+         Utils.print_dump(msg)
         if (msg["type"] == MsgDef.REQ_TYPE.SETUP_CONNECTION) then
             table.insert(sidMap_, msg["sid"])
             print(gameData)
@@ -70,9 +70,13 @@ function update(dt)
     end
 
     if data["size"] == "GAMEOVER" then
-        local ack = {}
-        ack["type"] = MsgDef.ACK_TYPE.GAME_OVER
-        ack["data"] = data
+        for i =1,2 do
+            local ack = {}
+            ack["type"] = MsgDef.ACK_TYPE.GAME_OVER
+            ack["data"] = data
+            local retMsg = cjson.encode(ack)
+            sendMsg2ClientBySid(data[i].sid, retMsg)
+        end
         return
     end
 
@@ -84,6 +88,7 @@ function update(dt)
         local retMsg = cjson.encode(ack)
         sendMsg2ClientBySid(data[i].sid, retMsg)
     end
+
 end
 
 --[[

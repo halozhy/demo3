@@ -5,7 +5,8 @@
 
 ]]
 
-local StateSprite = class("State", function(State)
+local StateSprite = class("State", function(data)
+    
     return display.newSprite("image/fight/fight/buff/firing.png")
 end)
 

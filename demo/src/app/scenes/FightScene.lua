@@ -55,6 +55,10 @@ function FightScene:onEnter()
         GameData:update(nil, data)
     end)
 
+    TCP.regListener(MsgDef.ACK_TYPE.GAME_OVER, function(resp)
+        TCP.send(resp["type"],resp["data"])
+    end)
+
 end
 
 --[[--

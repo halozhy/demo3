@@ -7,11 +7,6 @@
 local GameDef = require("lua.inGame.def.GameDef")
 local Player = require("lua.inGame.Player")
 local EnemyDef = require("lua.inGame.def.EnemyDef")
-local Card1 = require("lua.inGame.card.Card1")
-local Card2 = require("lua.inGame.card.Card2")
-local Card3 = require("lua.inGame.card.Card3")
-local Card4 = require("lua.inGame.card.Card4")
-local Card5 = require("lua.inGame.card.Card5")
 local Utils = require("lua.Utils")
 
 GameData = {
@@ -103,7 +98,7 @@ function GameData:addPlayer(msg)
       print("sssssssssss  gamedata addplayer sssssssssssssssss")
     self.player1_:createCard()
     self.sid_[1] = msg[1].sid
-    self.player2_  = Player:new(self,2,msg[1])
+    self.player2_  = Player:new(self,2,msg[2])
     self.player2_:createCard()
     self.sid_[2] = msg[2].sid
     self.isPause_ = false
