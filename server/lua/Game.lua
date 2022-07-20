@@ -69,8 +69,6 @@ function update(dt)
         return
     end
 
-    print()
-
     if data["size"] == "GAMEOVER" then
         local ack = {}
         ack["type"] = MsgDef.ACK_TYPE.GAME_OVER
